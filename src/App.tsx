@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment } from 'react';
+import { ApolloProvider } from 'react-apollo'
+import { client } from './apollo/client';
+import Header from './components/Header';
+import { ListClientes, EditarCliente, CreateCliente } from './pages/Clientes';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { ClientesRoutes } from './routes';
+
+const RouteWithClientes = Object.keys(ClientesRoutes).map(key => {
+  const route = ClientesRoutes[key]
+  return (
+    <Route
+      key={key}
+      exact={route.exact}
+      path={route.declarativePath}
+      component={route.component}
+    />
+  )
+})
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <Router>
+        <Fragment>
+          <Header></Header>
+          <div className='container'>
+            <Switch>
+              {RouteWithClientes}
+            </Switch>
+          </div>
+        </Fragment>
+      </Router>
+
+    </ApolloProvider>
+
   );
 }
 
